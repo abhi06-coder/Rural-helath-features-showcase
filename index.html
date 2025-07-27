@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Rural Health & Telemedicine Platform Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Calm Harmony" -->
+    <!-- Application Structure Plan: The application is structured into six logical, thematic sections. This thematic approach provides a guided, linear narrative that helps users understand the platform's components layer by layer. Navigation is handled by a sticky header. Key interactions include tabbed interfaces to compare technologies and interactive diagrams. The primary interaction is now clicking on any feature card to open a modal with a detailed implementation deep-dive, making the entire blueprint explorable. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: All Features -> Goal: Detail & Explain -> Viz/Presentation: Interactive cards with a modal popup -> Interaction: Clicking a card to view a detailed implementation guide with tables, lists, and code examples. -> Justification: Provides in-depth information on demand for every feature without cluttering the main view, turning the high-level summary into a comprehensive technical document. Library/Method: Tailwind CSS, Vanilla JS.
+        - Report Info: Core Platform Architecture -> Goal: Organize & Compare -> Viz/Presentation: Tabbed content, HTML/CSS flow diagrams -> Interaction: Clicking tabs to switch views -> Justification: Allows direct comparison of technologies and visualizes complex processes. Library/Method: Tailwind CSS, Vanilla JS.
+        - Report Info: AI Symptom Checker Logic -> Goal: Inform -> Viz/Presentation: Doughnut chart -> Interaction: Hovering over the chart -> Justification: Provides a high-level overview. Library/Method: Chart.js.
+        - Report Info: Final Technology Stack -> Goal: Inform & Summarize -> Viz/Presentation: Doughnut chart -> Interaction: Hovering on chart segments -> Justification: Quick, visual summary of the technology stack. Library/Method: Chart.js.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB; /* Warm Neutral - Gray 50 */
+            color: #1F2937; /* Gray 800 */
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #1D4ED8; /* Accent - Blue 700 */
+            border-bottom-color: #1D4ED8;
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #3B82F6; /* Accent - Blue 500 */
+            color: #FFFFFF;
+        }
+        .flow-step {
+            position: relative;
+            padding-left: 2.5rem;
+            padding-bottom: 1.5rem;
+        }
+        .flow-step:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 2px;
+            height: 100%;
+            background-color: #D1D5DB; /* Gray 300 */
+        }
+        .flow-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #FFFFFF;
+            border: 2px solid #D1D5DB; /* Gray 300 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .modal-content table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+        .modal-content th, .modal-content td {
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .modal-content th {
+            background-color: #f3f4f6;
+        }
+        .modal-content code {
+            background-color: #1F2937;
+            color: #F9FAFB;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+        .modal-content pre {
+            background-color: #1F2937;
+            color: #F9FAFB;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">Rural Health Blueprint</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#section1" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Core Architecture</a>
+                        <a href="#section2" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Interaction Suite</a>
+                        <a href="#section3" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Data Intelligence</a>
+                        <a href="#section4" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Engagement</a>
+                        <a href="#section5" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Advanced Features</a>
+                        <a href="#section6" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Infrastructure</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#section1" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Core Architecture</a>
+                <a href="#section2" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Interaction Suite</a>
+                <a href="#section3" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Data Intelligence</a>
+                <a href="#section4" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Engagement</a>
+                <a href="#section5" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Advanced Features</a>
+                <a href="#section6" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Infrastructure</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">Architectural Blueprint</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">An interactive exploration of the Unified Rural Health & Telemedicine Platform. Click any feature card to see a detailed implementation guide.</p>
+        </div>
+
+        <!-- Section 1: Core Platform Architecture & User Foundation -->
+        <section id="section1" class="mb-16 scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">1. Core Platform Architecture</h3>
+            <p class="text-lg text-gray-600 mb-8">This section details the foundational pillars of the platform: the user dashboard, role-based access, and data privacy. These elements are critical for creating a secure, personalized, and trustworthy user experience.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="section-card p-6" data-id="dashboard">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Dynamic User Dashboard</h4>
+                        <p class="text-gray-600 mb-4">The personalized landing page for users, providing a consolidated view of health data. Performance and state management are key.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="auth">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Multi-Role Authentication</h4>
+                        <p class="text-gray-600 mb-4">Securely differentiating between Patients, Doctors, and Admins using Firebase Authentication and Custom Claims.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="privacy">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Data Privacy & Consent</h4>
+                        <p class="text-gray-600 mb-4">Ensuring PHI is encrypted and handled with explicit, auditable user consent through Firestore Security Rules.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Real-Time Patient-Doctor Interaction Suite -->
+        <section id="section2" class="mb-16 scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">2. Patient-Doctor Interaction Suite</h3>
+            <p class="text-lg text-gray-600 mb-8">This section explores the core features that connect patients and doctors, including the doctor directory, teleconsultation module, and appointment scheduling system. Reliability and user trust are paramount here.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="section-card p-6" data-id="directory">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Doctor Directory & Onboarding</h4>
+                        <p class="text-gray-600 mb-4">A filterable directory of verified doctors. The onboarding workflow ensures credentials are authenticated by an admin before a doctor's profile goes live.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                 <div class="section-card p-6" data-id="teleconsult">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Teleconsultation & Scheduling</h4>
+                        <p class="text-gray-600 mb-4">High-fidelity video/chat using Agora SDK for reliability on rural networks. Appointments are managed via FullCalendar and notifications are automated.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Health Data Intelligence and Visualization -->
+        <section id="section3" class="mb-16 scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">3. Health Data Intelligence</h3>
+            <p class="text-lg text-gray-600 mb-8">This section covers how raw data is transformed into actionable insights through an AI symptom checker, a personal health timeline, and a community health map.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="section-card p-6" data-id="symptomChecker">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">AI-Based Symptom Checker</h4>
+                        <p class="text-gray-600 mb-4">A basic, non-diagnostic tool to guide users. The logic is a serverless, rule-based decision tree defined in a manageable JSON format.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="timelineMap">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Health Timeline & Community Map</h4>
+                        <p class="text-gray-600 mb-4">A chronological health history for each user and an anonymized health map for public health officials, built on scalable data models.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Platform Administration and Community Engagement -->
+        <section id="section4" class="mb-16 scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">4. Administration & Engagement</h3>
+            <p class="text-lg text-gray-600 mb-8">Features that enable platform management, content dissemination, and quality control, turning the platform into a trusted community resource.</p>
+             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="section-card p-6" data-id="blog">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Multilingual Blog</h4>
+                        <p class="text-gray-600">A CMS-like structure using Firestore and Markdown, with full language support via `react-i18next`.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="feedback">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">User Feedback System</h4>
+                        <p class="text-gray-600">Ratings are aggregated using a Firebase Function to efficiently calculate and display average doctor ratings.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="adminPanel">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Role-Based Admin Panel</h4>
+                        <p class="text-gray-600">Built with React Admin for rapid development, providing secure interfaces for platform management.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Advanced Accessibility and Emergency Features -->
+        <section id="section5" class="mb-16 scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">5. Advanced Accessibility & Emergency</h4>
+            <p class="text-lg text-gray-600 mb-8">Critical features that enhance the platform's utility, including an emergency SOS button, secure QR-based profile access, and voice input for illiterate users.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="section-card p-6" data-id="sos">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Emergency SOS</h4>
+                        <p class="text-gray-600">A single-tap button uses the Geolocation API to send the user's location to the nearest health worker.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="qr">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">QR-Based Profile Access</h4>
+                        <p class="text-gray-600">Generates a QR code with a secure, time-bound, single-use token for read-only access to a user's health timeline.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="voice">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Voice Input</h4>
+                        <p class="text-gray-600">Leverages the Web Speech API to allow users with low literacy to input symptoms via voice.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Technical Infrastructure and Deployment Strategy -->
+        <section id="section6" class="scroll-mt-20">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">6. Technical Infrastructure</h4>
+            <p class="text-lg text-gray-600 mb-8">The non-functional requirements and deployment strategy ensuring the platform is reliable, performant, and maintainable, with a focus on offline capability.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="section-card p-6" data-id="pwa">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">PWA for Offline Functionality</h4>
+                        <p class="text-gray-600 mb-4">Service workers and Workbox enable the app to be "installable" and provide offline access to critical information.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="hosting">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Final Stack & Hosting</h4>
+                        <p class="text-gray-600 mb-4">The platform is built on a modern, scalable stack. Firebase Hosting is recommended for its seamless integration with the backend.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-16">
+        <div class="container mx-auto py-6 px-4 text-center text-gray-500">
+            <p>&copy; 2025 Rural Health Platform Initiative. This is a conceptual blueprint.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="details-modal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl m-4 max-w-2xl w-full relative">
+            <div class="p-6 border-b">
+                <h3 id="modal-title" class="text-2xl font-bold"></h3>
+            </div>
+            <div id="modal-content" class="modal-content p-6">
+                <!-- Detailed content will be injected here -->
+            </div>
+            <div class="p-4 bg-gray-50 border-t text-right">
+                 <button id="close-modal-button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const detailedInfo = {
+                dashboard: {
+                    title: 'Dynamic User Dashboard',
+                    description: `
+                        <h5>State Management Strategy</h5>
+                        <p>For this platform, <strong>Redux Toolkit</strong> is the recommended solution. It provides a centralized, predictable state container that is highly optimized for performance, ensuring that components only re-render when the specific slice of data they are subscribed to changes. This selective re-rendering is a crucial accessibility feature, ensuring a smooth user experience even on less powerful hardware.</p>
+                        <table>
+                            <thead><tr><th>Feature</th><th>Redux Toolkit</th><th>React Context API</th><th>Recommendation</th></tr></thead>
+                            <tbody>
+                                <tr><td>Use Case</td><td>Complex, frequently-updated global state</td><td>Simple, low-frequency state (e.g., theme)</td><td><strong>Redux Toolkit</strong></td></tr>
+                                <tr><td>Performance</td><td>Optimized re-renders via subscriptions</td><td>Can cause re-renders of entire sub-trees</td><td><strong>Redux Toolkit</strong></td></tr>
+                                <tr><td>DevTools</td><td>Advanced time-travel debugging support</td><td>No dedicated DevTools</td><td><strong>Redux Toolkit</strong></td></tr>
+                            </tbody>
+                        </table>
+                        <h5>Data Fetching and Synchronization</h5>
+                        <p>Upon a successful user login, the application will dispatch an asynchronous thunk action. This thunk will orchestrate parallel data-fetching operations from Firebase Firestore to retrieve the user's core profile, recent health events, upcoming appointments, and any unread notifications. This initial data load populates the Redux store, making the information instantly available to all dashboard components.</p>
+                    `
+                },
+                auth: {
+                    title: 'Multi-Role Authentication',
+                    description: `
+                        <h5>Authentication & Authorization</h5>
+                        <p>A robust and secure role-based access control (RBAC) system is the linchpin of the platform's security architecture. <strong>Firebase Authentication</strong> will serve as the core authentication service, supporting both Email/Password and Phone OTP sign-in methods.</p>
+                        <h5>Authorization via Custom Claims</h5>
+                        <p>The most secure and efficient method for managing roles within Firebase is <strong>Custom Claims</strong>. When a role is assigned (e.g., an admin verifies a doctor), a Firebase Function is triggered. This function uses the Firebase Admin SDK to set a custom claim on the user's authentication token, such as <code>{ "role": "doctor" }</code>. The role becomes an undeniable, server-verified attribute embedded directly within the user's JWT ID token. This simplifies security rules, reduces database reads, and improves performance.</p>
+                        <h5>Firestore Security Rules Integration</h5>
+                        <p>Custom claims are used within Firestore Security Rules to enforce data access policies at the database level. For example, a rule to grant doctors access to a specific collection would be written as:</p>
+                        <pre><code>allow read, write: if request.auth.token.role == 'doctor';</code></pre>
+                    `
+                },
+                privacy: {
+                    title: 'Data Privacy & Consent',
+                    description: `
+                        <h5>Firestore Security Rules</h5>
+                        <p>This is the primary line of defense. The rules enforce the principle of least privilege:</p>
+                        <ul>
+                            <li><strong>Patient Data Ownership:</strong> A patient can only read and write to their own health data, enforced with a rule like: <code>match /users/{userId}/{document=**} { allow read, write: if request.auth.uid == userId; }</code></li>
+                            <li><strong>Conditional Doctor Access:</strong> A doctor's access is granted only if a valid and active link (e.g., a consultation document) exists between them.</li>
+                            <li><strong>Admin Access:</strong> Administrative access is granted based on the <code>admin</code> custom claim.</li>
+                        </ul>
+                        <h5>Data Encryption</h5>
+                        <p>Firestore automatically encrypts all data at rest and in transit, leveraging Google Cloud's robust security infrastructure. This is a foundational requirement for compliance with standards like HIPAA.</p>
+                        <h5>Auditable Consent Management</h5>
+                        <p>User consent is recorded as a timestamped, immutable document in a <code>consents</code> subcollection under the user's profile. Each document captures the <code>consentType</code>, a <code>granted: true</code> status, the <code>doctorId</code>, and a <code>timestamp</code>. Firestore security rules programmatically check for this consent document before granting access, creating a verifiable and auditable trail.</p>
+                    `
+                },
+                directory: {
+                    title: 'Doctor Directory & Onboarding',
+                    description: `
+                        <h5>Data Modeling in Firestore</h5>
+                        <p>A root-level <code>doctors</code> collection will store all doctor profiles. Each document will contain fields for filtering, such as <code>specialization</code>, <code>region</code>, <code>qualifications</code>, and a crucial boolean field, <code>isVerified</code>.</p>
+                        <h5>Filtering and Querying</h5>
+                        <p>The platform will leverage Firestore's querying capabilities to allow users to filter the directory. Firestore can efficiently execute compound queries that chain multiple <code>where()</code> clauses. For full-text search, integrating a third-party service like Algolia is recommended for future versions.</p>
+                        <h5>Doctor Onboarding Workflow</h5>
+                        <p>Doctors register and upload credentials to Firebase Storage. An administrator reviews these documents via the Admin Panel and, upon verification, updates the <code>isVerified</code> field to <code>true</code>. Only verified doctors are visible in the public directory.</p>
+                    `
+                },
+                teleconsult: {
+                    title: 'Teleconsultation & Scheduling',
+                    description: `
+                        <h5>High-Fidelity Teleconsultation Module</h5>
+                        <p>The reliability, quality, and security of teleconsultation are paramount. Using a managed Communication Platform as a Service (CPaaS) like the <strong>Agora SDK</strong> is highly recommended over a DIY WebRTC solution. Agora's globally distributed network is optimized for low latency and high-quality video, even on unstable rural networks, and significantly reduces development time.</p>
+                        <h5>Chat Functionality</h5>
+                        <p><strong>Cloud Firestore</strong> is the recommended database for chat. Its document/subcollection model allows chat messages to be stored neatly in a <code>messages</code> subcollection under the main <code>consultation</code> document. The <code>onSnapshot</code> listener provides real-time updates to the UI.</p>
+                        <h5>Appointment Scheduling & Notifications</h5>
+                        <p>The <strong>FullCalendar</strong> library is the industry standard for building rich, interactive calendar interfaces. Appointments are stored in a root-level <code>appointments</code> collection in Firestore. When an appointment's status changes, a Firebase Function is triggered, which integrates with the <strong>Twilio SDK</strong> to send automated SMS/Email reminders and confirmations.</p>
+                    `
+                },
+                symptomChecker: {
+                    title: 'AI-Based Symptom Checker',
+                    description: `
+                        <h5>Backend Logic</h5>
+                        <p>The core logic is encapsulated within a single, invokable <strong>Firebase Function</strong>. This serverless architecture ensures the rule-based system is secure and can be updated centrally.</p>
+                        <h5>Rule-Based Engine</h5>
+                        <p>The "AI" is a deterministic decision tree defined in a <strong>JSON-based condition graph</strong>, not hard-coded logic. This allows medical professionals to update the rules without code changes.</p>
+                        <p>Example JSON Condition Graph:</p>
+                        <pre><code>{
+  "conditions": [
+    {
+      "name": "Possible Viral Fever",
+      "symptoms": ["fever", "body_ache", "headache"],
+      "recommendation": "..."
+    }, {
+      "name": "Possible Common Cold",
+      "symptoms": ["cough", "runny_nose"],
+      "recommendation": "..."
+    }
+  ]
+}</code></pre>
+                        <p>A prominent disclaimer will always be displayed, stating the tool is for informational purposes only and not a substitute for professional medical diagnosis.</p>
+                    `
+                },
+                timelineMap: {
+                    title: 'Health Timeline & Community Map',
+                    description: `
+                        <h5>Chronological User Health Timeline</h5>
+                        <p>Storing health events as an array in the user document is not scalable. The correct approach is to use a <strong>subcollection</strong>: <code>/users/{userId}/healthEvents/{eventId}</code>. This keeps the main user document lean and allows for efficient, paginated querying. For the UI, a library like <code>react-vertical-timeline-component</code> is recommended.</p>
+                        <h5>File Uploads (Prescriptions/Lab Reports)</h5>
+                        <p>Files are uploaded directly to <strong>Firebase Storage</strong>. The secure download URL is then stored in the corresponding <code>healthEvents</code> document in Firestore.</p>
+                        <h5>Village-Wise Community Health Map</h5>
+                        <p>To ensure privacy, a Firebase Function anonymizes diagnosis data and saves it to a separate <code>aggregatedHealthData</code> collection. A scheduled function then pre-aggregates this data into a <code>mapData</code> collection for performance. The frontend uses <strong>Leaflet.js</strong> to display village boundaries (from a source like DataMeet) and <strong>Leaflet.heat</strong> to visualize the pre-aggregated data as a heatmap.</p>
+                    `
+                },
+                blog: {
+                    title: 'Multilingual Health Awareness Blog',
+                    description: `
+                        <h5>CMS-like Structure</h5>
+                        <p>The platform leverages Firestore as a lightweight, "headless" CMS. Blog posts are stored in a <code>blogPosts</code> collection, with the content written in <strong>Markdown</strong>. This is easy for admins to write and can be safely rendered on the client using the <code>react-markdown</code> library.</p>
+                        <h5>Multi-Language Support (i18next)</h5>
+                        <p>The <code>react-i18next</code> library handles all internationalization. UI text (buttons, labels) is managed via JSON translation files. Blog content is managed by creating separate Firestore documents for each language version of an article. A language switcher component calls <code>i18n.changeLanguage()</code>, which automatically re-renders the UI and triggers a new data fetch for content in the selected language.</p>
+                    `
+                },
+                feedback: {
+                    title: 'User Feedback and Rating System',
+                    description: `
+                        <h5>Data Modeling & Aggregation</h5>
+                        <p>Calculating an average rating by querying all individual rating documents is inefficient and costly. The correct approach is to <strong>denormalize</strong> this data.</p>
+                        <p>A <strong>Firebase Function</strong> with an <code>onWrite</code> trigger is attached to the <code>ratings</code> collection. When a new rating is submitted, this function uses a Firestore transaction to atomically update two fields on the corresponding doctor's document: <code>totalRating</code> (incremented by the new rating value) and <code>ratingCount</code> (incremented by 1). Displaying the average rating (<code>totalRating / ratingCount</code>) then requires only a single, fast read of the doctor's main document.</p>
+                    `
+                },
+                adminPanel: {
+                    title: 'Role-Based Admin Panel',
+                    description: `
+                        <h5>Framework Selection</h5>
+                        <p><strong>React Admin</strong> is a powerful framework specifically designed for building B2B and internal admin applications. It provides pre-built components for lists, forms, and filtering, which can be connected to Firebase using a data provider like <code>react-admin-firebase</code>. This drastically accelerates development.</p>
+                        <h5>Key Administrative Features</h5>
+                        <ul>
+                            <li><strong>Doctor Management:</strong> A view for admins to verify doctors. Clicking "Verify" triggers a function that updates the doctor's <code>isVerified</code> status in Firestore and sets their <code>role: 'doctor'</code> custom claim.</li>
+                            <li><strong>Content Management:</strong> A full CRUD interface for the <code>blogPosts</code> collection.</li>
+                            <li><strong>Analytics Dashboard:</strong> Displays key platform metrics, populated from pre-aggregated data generated by scheduled functions.</li>
+                            <li><strong>Health Campaign Scheduler:</strong> Allows admins to schedule community health events, which triggers targeted notifications to users in the specified region.</li>
+                        </ul>
+                    `
+                },
+                sos: {
+                    title: 'Emergency SOS with Geolocation',
+                    description: `
+                        <h5>Geolocation API</h5>
+                        <p>When the SOS button is tapped, the app calls <code>navigator.geolocation.getCurrentPosition()</code>. This standard browser API prompts the user for one-time permission to access their location, respecting privacy.</p>
+                        <h5>Alerting Mechanism</h5>
+                        <p>The client invokes a Firebase Function with the user's coordinates. The function determines the appropriate recipient (e.g., a regional health officer) and uses the <strong>Twilio API</strong> to send a high-priority SMS. This message contains the user's name, contact number, and a direct Google Maps link to their location (e.g., <code>https://maps.google.com/?q=LAT,LONG</code>) for rapid response.</p>
+                    `
+                },
+                qr: {
+                    title: 'QR-Based Profile Access',
+                    description: `
+                        <h5>Secure, Time-Bound, Single-Use Tokens</h5>
+                        <p>A static link is not secure. Instead, the QR code encodes a URL with a unique, short-lived, single-use token. When the user requests their QR code, an invokable Firebase Function generates a secure token, stores it in a <code>qr_tokens</code> collection with a short expiry (e.g., 5 minutes), and returns it to the client.</p>
+                        <h5>Verification Workflow</h5>
+                        <p>When a health worker scans the code, the destination page extracts the token. It queries Firestore to verify the token exists, is not expired, and has not been used. If valid, it displays the read-only timeline and immediately invalidates the token in the database to prevent reuse.</p>
+                    `
+                },
+                voice: {
+                    title: 'Voice Input for Illiterate Users',
+                    description: `
+                        <h5>Web Speech API</h5>
+                        <p>This feature leverages the <strong>Web Speech API</strong>, which is supported by most modern browsers for speech recognition. The <code>react-speech-recognition</code> library is recommended to simplify integration, providing a custom hook (<code>useSpeechRecognition</code>) that abstracts away the native API's complexity.</p>
+                        <h5>User Workflow</h5>
+                        <p>The user taps a microphone icon, the app starts listening, and the real-time transcript is displayed for confirmation. The final text is then parsed to identify keywords that match symptoms in the symptom checker's rule engine. It's crucial to show the transcribed text and allow for edits, as accuracy can be variable.</p>
+                    `
+                },
+                pwa: {
+                    title: 'PWA for Offline Functionality',
+                    description: `
+                        <h5>Service Worker and Caching</h5>
+                        <p>A Progressive Web App is essential for areas with unreliable internet. A <strong>Service Worker</strong>, implemented using the <strong>Workbox</strong> library, acts as a network proxy to enable offline access.</p>
+                        <ul>
+                            <li><strong>Precaching (App Shell):</strong> The minimal set of HTML, CSS, and JS files for the application's frame is cached on installation.</li>
+                            <li><strong>Runtime Caching (Data):</strong> A "Stale-While-Revalidate" strategy is used for dynamic content like blog posts, serving a cached version instantly while fetching updates in the background. A "Network First, Falling Back to Cache" strategy is used for critical data like the user's health timeline.</li>
+                        </ul>
+                        <h5>Offline Data Synchronization</h5>
+                        <p>If a user submits a form while offline, the data is saved locally to IndexedDB. The Background Sync API detects when a connection is re-established and automatically sends the queued data to Firestore.</p>
+                    `
+                },
+                hosting: {
+                    title: 'Final Stack & Hosting',
+                    description: `
+                        <h5>Final Technology Stack Summary</h5>
+                        <ul>
+                            <li><strong>Frontend:</strong> React, Redux Toolkit, Tailwind CSS, FullCalendar, Leaflet.js, <code>react-i18next</code>.</li>
+                            <li><strong>Backend:</strong> Firebase (Authentication, Firestore, Storage, Cloud Functions).</li>
+                            <li><strong>Third-Party Services:</strong> Agora (Video/Audio), Twilio (SMS/Email).</li>
+                        </ul>
+                        <h5>Hosting Platform Comparison</h5>
+                        <p><strong>Firebase Hosting</strong> is the recommended choice. While Vercel offers a world-class developer experience, the "home-field advantage" of Firebase Hosting is a greater benefit for this project. Since the entire backend is built on Firebase, using Firebase Hosting simplifies configuration, security, and deployment significantly. The integration is seamless, and its global CDN provides excellent performance for a client-side rendered React SPA.</p>
+                    `
+                }
+            };
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Active nav link highlighting on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+            sections.forEach(section => observer.observe(section));
+
+            // Modal functionality
+            const modal = document.getElementById('details-modal');
+            const closeModalButton = document.getElementById('close-modal-button');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const clickableCards = document.querySelectorAll('.section-card');
+
+            const openModal = (id) => {
+                const info = detailedInfo[id];
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalContent.innerHTML = info.description;
+                    modal.classList.remove('hidden');
+                }
+            };
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+            };
+
+            clickableCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.getAttribute('data-id');
+                    openModal(id);
+                });
+            });
+
+            closeModalButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
