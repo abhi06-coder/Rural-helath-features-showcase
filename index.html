@@ -14,7 +14,6 @@
     <!-- Visualization & Content Choices: 
         - Report Info: All Features -> Goal: Detail & Explain -> Viz/Presentation: Interactive cards with a modal popup -> Interaction: Clicking a card to view a detailed implementation guide with tables, lists, and code examples. -> Justification: Provides in-depth information on demand for every feature without cluttering the main view, turning the high-level summary into a comprehensive technical document. Library/Method: Tailwind CSS, Vanilla JS.
         - Report Info: Core Platform Architecture -> Goal: Organize & Compare -> Viz/Presentation: Tabbed content, HTML/CSS flow diagrams -> Interaction: Clicking tabs to switch views -> Justification: Allows direct comparison of technologies and visualizes complex processes. Library/Method: Tailwind CSS, Vanilla JS.
-        - Report Info: AI Symptom Checker Logic -> Goal: Inform -> Viz/Presentation: Doughnut chart -> Interaction: Hovering over the chart -> Justification: Provides a high-level overview. Library/Method: Chart.js.
         - Report Info: Final Technology Stack -> Goal: Inform & Summarize -> Viz/Presentation: Doughnut chart -> Interaction: Hovering on chart segments -> Justification: Quick, visual summary of the technology stack. Library/Method: Chart.js.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -153,8 +152,8 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#section1" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Core Architecture</a>
                         <a href="#section2" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Interaction Suite</a>
-                        <a href="#section3" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Data Intelligence</a>
-                        <a href="#section4" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Engagement</a>
+                        <a href="#section3" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Proactive Health</a>
+                        <a href="#section4" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Engagement & Admin</a>
                         <a href="#section5" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Advanced Features</a>
                         <a href="#section6" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Infrastructure</a>
                     </div>
@@ -173,8 +172,8 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#section1" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Core Architecture</a>
                 <a href="#section2" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Interaction Suite</a>
-                <a href="#section3" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Data Intelligence</a>
-                <a href="#section4" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Engagement</a>
+                <a href="#section3" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Proactive Health</a>
+                <a href="#section4" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Engagement & Admin</a>
                 <a href="#section5" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Advanced Features</a>
                 <a href="#section6" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-600">Infrastructure</a>
             </div>
@@ -191,12 +190,12 @@
         <!-- Section 1: Core Platform Architecture & User Foundation -->
         <section id="section1" class="mb-16 scroll-mt-20">
             <h3 class="text-3xl font-bold mb-2 text-gray-800">1. Core Platform Architecture</h3>
-            <p class="text-lg text-gray-600 mb-8">This section details the foundational pillars of the platform: the user dashboard, role-based access, and data privacy. These elements are critical for creating a secure, personalized, and trustworthy user experience.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <p class="text-lg text-gray-600 mb-8">This section details the foundational pillars of the platform: the user dashboard, role-based access, data privacy, and the user's personal health history.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
                 <div class="section-card p-6" data-id="dashboard">
                     <div class="flex-grow">
                         <h4 class="text-xl font-semibold mb-3">Dynamic User Dashboard</h4>
-                        <p class="text-gray-600 mb-4">The personalized landing page for users, providing a consolidated view of health data. Performance and state management are key.</p>
+                        <p class="text-gray-600 mb-4">The personalized landing page for users, providing a consolidated view of health data, appointments, and notifications.</p>
                     </div>
                     <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
                 </div>
@@ -214,13 +213,20 @@
                     </div>
                     <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
                 </div>
+                <div class="section-card p-6" data-id="timeline">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">User Health Timeline</h4>
+                        <p class="text-gray-600 mb-4">A chronological medical history: symptoms, diagnoses, prescriptions, and follow-ups, built on a scalable data model.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
             </div>
         </section>
 
         <!-- Section 2: Real-Time Patient-Doctor Interaction Suite -->
         <section id="section2" class="mb-16 scroll-mt-20">
             <h3 class="text-3xl font-bold mb-2 text-gray-800">2. Patient-Doctor Interaction Suite</h3>
-            <p class="text-lg text-gray-600 mb-8">This section explores the core features that connect patients and doctors, including the doctor directory, teleconsultation module, and appointment scheduling system. Reliability and user trust are paramount here.</p>
+            <p class="text-lg text-gray-600 mb-8">This section explores the core features that connect patients and doctors, including the doctor directory, teleconsultation module, and appointment scheduling system.</p>
             <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="section-card p-6" data-id="directory">
                     <div class="flex-grow">
@@ -239,22 +245,15 @@
             </div>
         </section>
 
-        <!-- Section 3: Health Data Intelligence and Visualization -->
+        <!-- Section 3: Proactive Health Management -->
         <section id="section3" class="mb-16 scroll-mt-20">
-            <h3 class="text-3xl font-bold mb-2 text-gray-800">3. Health Data Intelligence</h3>
-            <p class="text-lg text-gray-600 mb-8">This section covers how raw data is transformed into actionable insights through an AI symptom checker, a personal health timeline, and a community health map.</p>
-            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="section-card p-6" data-id="symptomChecker">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">3. Proactive Health Management</h3>
+            <p class="text-lg text-gray-600 mb-8">This section covers features designed to empower users with actionable, personalized guidance, shifting the focus from reactive treatment to proactive wellness.</p>
+            <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8">
+                <div class="section-card p-6" data-id="nudges">
                     <div class="flex-grow">
-                        <h4 class="text-xl font-semibold mb-3">AI-Based Symptom Checker</h4>
-                        <p class="text-gray-600 mb-4">A basic, non-diagnostic tool to guide users. The logic is a serverless, rule-based decision tree defined in a manageable JSON format.</p>
-                    </div>
-                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
-                </div>
-                <div class="section-card p-6" data-id="timelineMap">
-                    <div class="flex-grow">
-                        <h4 class="text-xl font-semibold mb-3">Health Timeline & Community Map</h4>
-                        <p class="text-gray-600 mb-4">A chronological health history for each user and an anonymized health map for public health officials, built on scalable data models.</p>
+                        <h4 class="text-xl font-semibold mb-3">Daily Health Nudges</h4>
+                        <p class="text-gray-600 mb-4">A system for sending personalized, timely health reminders to users as push notifications, configured by doctors to improve adherence to care plans.</p>
                     </div>
                     <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
                 </div>
@@ -263,9 +262,9 @@
 
         <!-- Section 4: Platform Administration and Community Engagement -->
         <section id="section4" class="mb-16 scroll-mt-20">
-            <h3 class="text-3xl font-bold mb-2 text-gray-800">4. Administration & Engagement</h3>
-            <p class="text-lg text-gray-600 mb-8">Features that enable platform management, content dissemination, and quality control, turning the platform into a trusted community resource.</p>
-             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">4. Engagement & Administration</h3>
+            <p class="text-lg text-gray-600 mb-8">Features that enable platform management, content dissemination, quality control, and public health analysis.</p>
+             <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
                 <div class="section-card p-6" data-id="blog">
                     <div class="flex-grow">
                         <h4 class="text-xl font-semibold mb-3">Multilingual Blog</h4>
@@ -284,6 +283,13 @@
                     <div class="flex-grow">
                         <h4 class="text-xl font-semibold mb-3">Role-Based Admin Panel</h4>
                         <p class="text-gray-600">Built with React Admin for rapid development, providing secure interfaces for platform management.</p>
+                    </div>
+                    <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
+                </div>
+                <div class="section-card p-6" data-id="map">
+                    <div class="flex-grow">
+                        <h4 class="text-xl font-semibold mb-3">Village-Wise Health Map</h4>
+                        <p class="text-gray-600">Anonymized data is aggregated to create a village-wise health map for public health officials to track disease trends.</p>
                     </div>
                     <p class="text-sm font-medium text-blue-600 mt-4">Learn More &rarr;</p>
                 </div>
@@ -413,6 +419,17 @@
                         <p>User consent is recorded as a timestamped, immutable document in a <code>consents</code> subcollection under the user's profile. Each document captures the <code>consentType</code>, a <code>granted: true</code> status, the <code>doctorId</code>, and a <code>timestamp</code>. Firestore security rules programmatically check for this consent document before granting access, creating a verifiable and auditable trail.</p>
                     `
                 },
+                timeline: {
+                    title: 'User Health Timeline',
+                    description: `
+                        <h5>Scalable Data Modeling</h5>
+                        <p>Storing health events as an array in the main user document is not scalable and will quickly hit Firestore's 1MB document size limit. The correct approach is to use a <strong>subcollection</strong>: <code>/users/{userId}/healthEvents/{eventId}</code>. This keeps the main user document lean and allows for efficient, paginated querying of a user's entire history.</p>
+                        <h5>File Uploads (Prescriptions/Lab Reports)</h5>
+                        <p>Files are uploaded directly from the client to <strong>Firebase Storage</strong> using the official SDK. This is secure and efficient. The secure download URL is then stored in the corresponding <code>healthEvents</code> document in Firestore.</p>
+                        <h5>UI Implementation</h5>
+                        <p>A library like <code>react-vertical-timeline-component</code> is recommended for displaying the events chronologically in a clean, user-friendly interface.</p>
+                    `
+                },
                 directory: {
                     title: 'Doctor Directory & Onboarding',
                     description: `
@@ -435,39 +452,29 @@
                         <p>The <strong>FullCalendar</strong> library is the industry standard for building rich, interactive calendar interfaces. Appointments are stored in a root-level <code>appointments</code> collection in Firestore. When an appointment's status changes, a Firebase Function is triggered, which integrates with the <strong>Twilio SDK</strong> to send automated SMS/Email reminders and confirmations.</p>
                     `
                 },
-                symptomChecker: {
-                    title: 'AI-Based Symptom Checker',
+                nudges: {
+                    title: 'Daily Health Nudges',
                     description: `
-                        <h5>Backend Logic</h5>
-                        <p>The core logic is encapsulated within a single, invokable <strong>Firebase Function</strong>. This serverless architecture ensures the rule-based system is secure and can be updated centrally.</p>
-                        <h5>Rule-Based Engine</h5>
-                        <p>The "AI" is a deterministic decision tree defined in a <strong>JSON-based condition graph</strong>, not hard-coded logic. This allows medical professionals to update the rules without code changes.</p>
-                        <p>Example JSON Condition Graph:</p>
-                        <pre><code>{
-  "conditions": [
-    {
-      "name": "Possible Viral Fever",
-      "symptoms": ["fever", "body_ache", "headache"],
-      "recommendation": "..."
-    }, {
-      "name": "Possible Common Cold",
-      "symptoms": ["cough", "runny_nose"],
-      "recommendation": "..."
-    }
-  ]
-}</code></pre>
-                        <p>A prominent disclaimer will always be displayed, stating the tool is for informational purposes only and not a substitute for professional medical diagnosis.</p>
+                        <h5>Feature Goal</h5>
+                        <p>This feature replaces a complex symptom checker with simple, actionable, and doctor-prescribed reminders. It focuses on proactive health management and adherence with zero effort required from the user beyond reading a notification.</p>
+                        <h5>Implementation Workflow</h5>
+                        <ol class="list-decimal pl-6 space-y-2">
+                            <li><strong>Configuration by Doctor:</strong> From the doctor's dashboard, they can set up a "nudge" for a patient. This involves writing a short message (e.g., "Time for your evening walk!") and setting a schedule (e.g., daily at 6:00 PM). This configuration is saved to a <code>nudges</code> subcollection under the user's document in Firestore.</li>
+                            <li><strong>Automated Backend Process:</strong> A <strong>Scheduled Firebase Function</strong> is set up to run at regular intervals (e.g., every 15 minutes) using the Cloud Scheduler integration.</li>
+                            <li><strong>Sending Notifications:</strong> When the function runs, it queries the entire database for any <code>nudges</code> that are due to be sent at that specific time. For each due nudge it finds, it uses the <strong>Firebase Cloud Messaging (FCM)</strong> service to send a push notification to the corresponding user's device.</li>
+                        </ol>
+                        <p>This server-centric approach is reliable and ensures the user receives timely, personalized, and actionable advice directly related to their care plan.</p>
                     `
                 },
-                timelineMap: {
-                    title: 'Health Timeline & Community Map',
+                map: {
+                    title: 'Village-Wise Community Health Map',
                     description: `
-                        <h5>Chronological User Health Timeline</h5>
-                        <p>Storing health events as an array in the user document is not scalable. The correct approach is to use a <strong>subcollection</strong>: <code>/users/{userId}/healthEvents/{eventId}</code>. This keeps the main user document lean and allows for efficient, paginated querying. For the UI, a library like <code>react-vertical-timeline-component</code> is recommended.</p>
-                        <h5>File Uploads (Prescriptions/Lab Reports)</h5>
-                        <p>Files are uploaded directly to <strong>Firebase Storage</strong>. The secure download URL is then stored in the corresponding <code>healthEvents</code> document in Firestore.</p>
-                        <h5>Village-Wise Community Health Map</h5>
-                        <p>To ensure privacy, a Firebase Function anonymizes diagnosis data and saves it to a separate <code>aggregatedHealthData</code> collection. A scheduled function then pre-aggregates this data into a <code>mapData</code> collection for performance. The frontend uses <strong>Leaflet.js</strong> to display village boundaries (from a source like DataMeet) and <strong>Leaflet.heat</strong> to visualize the pre-aggregated data as a heatmap.</p>
+                        <h5>Privacy-Preserving Data Aggregation</h5>
+                        <p>To ensure patient privacy, raw diagnosis data is never exposed. A Firebase Function with an <code>onWrite</code> trigger on the <code>consultations</code> collection automatically creates a completely anonymized record (e.g., <code>{ disease: 'gastro', village_code: '12345' }</code>) and saves it to a separate <code>aggregatedHealthData</code> collection.</p>
+                        <h5>Performance Optimization</h5>
+                        <p>Querying and aggregating this data on the fly would be slow. Therefore, a second scheduled function runs periodically (e.g., once a day) to pre-aggregate this data into a final <code>mapData</code> collection, which stores the total count of each disease per village. The map UI reads from this pre-calculated data for instant loading.</p>
+                        <h5>Map Visualization</h5>
+                        <p>The frontend uses <strong>Leaflet.js</strong> to display village boundaries (from a GeoJSON source like DataMeet) and the <strong>Leaflet.heat</strong> plugin to visualize the pre-aggregated data as a heatmap, providing a clear view of public health trends.</p>
                     `
                 },
                 blog: {
